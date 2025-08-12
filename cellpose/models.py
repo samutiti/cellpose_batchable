@@ -159,7 +159,7 @@ class CellposeModel():
              flow3D_smooth=0, stitch_threshold=0.0, 
              min_size=15, max_size_fraction=0.4, niter=None, 
              augment=False, tile_overlap=0.1, bsize=256, 
-             compute_masks=True, progress=None):
+             compute_masks=True, progress=None, batched=False):
         """ segment list of images x, or 4D array - Z x 3 x Y x X
 
         Args:
@@ -200,6 +200,7 @@ class CellposeModel():
             interp (bool, optional): interpolate during 2D dynamics (not available in 3D) . Defaults to True.
             compute_masks (bool, optional): Whether or not to compute dynamics and return masks. Returns empty array if False. Defaults to True.
             progress (QProgressBar, optional): pyqt progress bar. Defaults to None.
+            batched (bool, optional): flag that indicates if array is a batch of images. Defaults to False, when True assumes [B, C, H, W] configuration
 
         Returns:
             A tuple containing (masks, flows, styles, diams): 
@@ -218,7 +219,7 @@ class CellposeModel():
         if channels is not None:
             models_logger.warning("channels deprecated in v4.0.1+. If data contain more than 3 channels, only the first 3 channels will be used")
 
-        if isinstance(x, list) or x.squeeze().ndim == 5:
+        if isinstance(x, list) or x.squeeze().ndim == 5 or batched:
             self.timing = []
             masks, styles, flows = [], [], []
             tqdm_out = utils.TqdmToLogger(models_logger, level=logging.INFO)
