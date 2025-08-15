@@ -159,7 +159,7 @@ class CellposeModel():
              flow3D_smooth=0, stitch_threshold=0.0, 
              min_size=15, max_size_fraction=0.4, niter=None, 
              augment=False, tile_overlap=0.1, bsize=256, 
-             compute_masks=True, progress=None, batched=False):
+             compute_masks=True, progress=None, batched=False, verbose=True):
         """ segment list of images x, or 4D array - Z x 3 x Y x X
 
         Args:
@@ -251,7 +251,8 @@ class CellposeModel():
                     stitch_threshold=stitch_threshold, 
                     flow3D_smooth=flow3D_smooth,
                     progress=progress, 
-                    niter=niter)
+                    niter=niter,
+                    verbose=verbose)
                 masks.append(maski)
                 flows.append(flowi)
                 styles.append(stylei)
@@ -262,7 +263,7 @@ class CellposeModel():
         # reshape image
         x = transforms.convert_image(x, channel_axis=channel_axis,
                                         z_axis=z_axis, 
-                                        do_3D=(do_3D or stitch_threshold > 0))
+                                        do_3D=(do_3D or stitch_threshold > 0), verbose=verbose)
         
         # Add batch dimension if not present
         if x.ndim < 4:

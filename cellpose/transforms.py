@@ -538,7 +538,7 @@ def _convert_image_3d(x, channel_axis=None, z_axis=None):
     return x
 
 
-def convert_image(x, channel_axis=None, z_axis=None, do_3D=False):
+def convert_image(x, channel_axis=None, z_axis=None, do_3D=False, verbose=True):
     """Converts the image to have the z-axis first, channels last. Image will be converted to 3 channels if it is not already.
     If more than 3 channels are provided, only the first 3 channels will be used. 
 
@@ -564,7 +564,7 @@ def convert_image(x, channel_axis=None, z_axis=None, do_3D=False):
     # check if image is a torch array instead of numpy array, convert to numpy
     ndim = x.ndim
     if torch.is_tensor(x):
-        transforms_logger.warning("torch array used as input, converting to numpy")
+        if verbose: transforms_logger.warning("torch array used as input, converting to numpy")
         x = x.cpu().numpy()
 
     # should be 2D
